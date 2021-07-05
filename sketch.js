@@ -8,10 +8,14 @@ var canvas;
 var palyer, playerBase;
 var computer, computerBase;
 
-//Declare an array for arrows playerArrows = [ ]
-var playerArrows = [];
 
+var playerArrows = [];
+var computerArrows = []
 var arrow;
+
+function preload(){
+  backgroundImg = loadImage("assets/background.gif")
+}
 
 
 function setup() {
@@ -47,14 +51,13 @@ function setup() {
     120,
     120
   );
-  
- 
+   
 
 
 }
 
 function draw() {
-  background(180);
+  background(127);
 
   Engine.update(engine);
 
@@ -76,24 +79,33 @@ function draw() {
   computerArcher.display()
 
  // Use for loop to display arrow using showArrow() function
- for (var i = 0; i < arrow.length; i++) {
-  showArrows(arrow[i], i);
- }
+ for (var i = 0; i < playerArrows.length; i++) {
+  showArrows(i, playerArrows);
+}
+
+for (var i = 0; i < computerArrows.length; i++) {
+  showArrows(i, computerArrows);
+}
+
+
+//Call functions to detect collision for player and computer
+
 }
 
 function keyPressed() {
 
   if(keyCode === 32){
     // create an arrow object and add into an array ; set its angle same as angle of playerArcher
-    var posX = playerArcher.body-position.x; 
+    var posX = playerArcher.body.position.x;
     var posY = playerArcher.body.position.y;
     var angle = playerArcher.body.angle+PI/2;
-    
+
     var arrow = new PlayerArrow(posX, posY, 100, 10);
-    
-    arrow.trajectory = []; 
-    Matter.Body.setAngle(arrow.body, angle); 
+
+    arrow.trajectory = [];
+    Matter.Body.setAngle(arrow.body, angle);
     playerArrows.push(arrow);
+
   }
 }
 
@@ -101,17 +113,22 @@ function keyReleased () {
 
   if(keyCode === 32){
     //call shoot() function for each arrow in an array playerArrows
-    arrow.shoot();
+    if (playerArrows.length) {
+      var angle = playerArcher.body.angle+PI/2;
+      playerArrows[playerArrows.length - 1].shoot(angle);
+    }
   }
-
 
 }
 //Display arrow and Tranjectory
-function showArrows(index, arrow) {
-  arrow.display();
-  if (arrow.body.position.x >= width || arrow.body.position.y >= height - 50) {
-    Matter.World.remove(world, arrow.body);
-    arrow.splice(index, 1);
-  }
- }
+function showArrows(index, arrows) {
+  arrows[index].display();
+  
+    
+  
+ 
+
+}
+
+
 
